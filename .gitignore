@@ -1,0 +1,3 @@
+backend/target/
+backend/votes.sqlite*
+.DS_Store

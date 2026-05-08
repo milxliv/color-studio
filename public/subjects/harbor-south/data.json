@@ -1,0 +1,95 @@
+{
+  "id": "harbor-south",
+  "title": "Harbor South — Façade Color Studio",
+  "subtitle": "1766 Cape Coral Pkwy E · 6 Floors · 3 Stair Towers · Color Refresh Workspace",
+  "meta": {
+    "lines": ["HSCA Board / City Review", "Base: <strong>A-04 Architect Rendering</strong>"]
+  },
+  "footer": {
+    "left": "Harbor South Condominium Association · Color Study Tool",
+    "right": "Reference: City of Cape Coral LDC Article 5 §5.8.9 · Article 4 §4.2.15"
+  },
+  "canvasId": "A-04 / 1766 CAPE CORAL PKWY E",
+  "viewButtons": {
+    "proposed": "Live Recoloring",
+    "original": "Architect's A-04 (Original)"
+  },
+  "viewLabels": {
+    "proposed": "Proposed Elevation — Live Recoloring",
+    "original": "Architect's A-04 — Original (Coastal Teal)"
+  },
+  "image": "main.jpg",
+  "photos": [
+    { "src": "photos/ref-2.jpg", "label": "Front (across street)" },
+    { "src": "photos/ref-4.jpg", "label": "Bridge approach" },
+    { "src": "photos/ref-5.jpg", "label": "Bridge approach (near)" },
+    { "src": "photos/ref-6.jpg", "label": "Street level (close)" },
+    { "src": "photos/ref-7.jpg", "label": "Canal / rear side" },
+    { "src": "photos/ref-3.jpg", "label": "Aerial / canal" }
+  ],
+  "photosCaption": "Existing scheme: cream body, brick-red accent panels, charcoal stair towers, white trim. Live recoloring above shows proposed scheme applied to architect's A-04 rendering.",
+  "surfaces": [
+    {
+      "id": "body",
+      "label": "Body wall",
+      "sublabel": "White stucco surfaces",
+      "default": "#fafaf7",
+      "origHsl": { "h": 80, "s": 0.04, "l": 0.89 },
+      "areaShare": 0.62
+    },
+    {
+      "id": "tower",
+      "label": "Stair towers",
+      "sublabel": "3 vertical end / center volumes",
+      "default": "#7d9aa0",
+      "origHsl": { "h": 190, "s": 0.06, "l": 0.37 },
+      "areaShare": 0.23
+    },
+    {
+      "id": "accent",
+      "label": "Accent panels",
+      "sublabel": "Colored squares between balconies",
+      "default": "#5e94a0",
+      "origHsl": { "h": 187, "s": 0.27, "l": 0.50 },
+      "areaShare": 0.09
+    }
+  ],
+  "segmentation": {
+    "rules": [
+      { "rgbMin": [248, 248, 248], "assign": null, "comment": "pure white border" },
+      { "lumMax": 0.18, "assign": null, "comment": "very dark — shadows, palms, cars" },
+      { "hueRanges": [[200, 230]], "satMin": 0.30, "lumMin": 0.45, "assign": null, "comment": "blue sky" },
+      { "satMax": 0.10, "lumMin": 0.75, "assign": "body", "comment": "white stucco — bright" },
+      { "satMax": 0.10, "lumMin": 0.55, "lumMax": 0.75, "hueRanges": [[0, 90], [200, 360]], "assign": "body", "comment": "shaded body" },
+      { "hueRanges": [[170, 220]], "satMax": 0.20, "lumMin": 0.28, "lumMax": 0.50, "assign": "tower", "comment": "dark gray-teal towers" },
+      { "hueRanges": [[175, 205]], "satMin": 0.18, "satMax": 0.55, "lumMin": 0.35, "lumMax": 0.70, "assign": "accent", "comment": "mid-teal accents" }
+    ]
+  },
+  "compliance": {
+    "title": "Cape Coral §5.8.9 Compliance",
+    "regulationText": "LDC §5.8.9 requires neutral / earth-tone façade colors with bright accent colors limited to ≤15% of the façade.",
+    "thresholds": { "warn": 15, "fail": 25 },
+    "earthHues": [[20, 60], [70, 120], [175, 220]],
+    "satGates": { "low": 22, "earth": 45, "muted": 35 },
+    "labels": {
+      "body": "Body color: neutral / earth tone",
+      "tower": "Towers color: neutral / earth tone",
+      "accent": "Accent panels: bright color allowed"
+    },
+    "accentSurfaceId": "accent"
+  },
+  "palettes": [
+    { "name": "Existing — Cream & Brick Red", "desc": "Current scheme. Brick red accents, beige body, charcoal towers.", "colors": { "body": "#e9dcc4", "tower": "#5d5346", "accent": "#a23226" } },
+    { "name": "Option B — A-04 Coastal Teal (proposed)", "desc": "Architect's proposed direction. Soft teal towers and accents on white body.", "colors": { "body": "#fafaf7", "tower": "#7d9aa0", "accent": "#5e94a0" } },
+    { "name": "Modern Coastal — White & Bronze", "desc": "Contemporary SW Florida. Crisp white with warm bronze accents.", "colors": { "body": "#f4efe6", "tower": "#5a4a3a", "accent": "#8b6f47" } },
+    { "name": "Bimini Square — Warm Sand & Sage", "desc": "Aligned with new Bimini Basin developments down the road.", "colors": { "body": "#e8dfc9", "tower": "#7a8268", "accent": "#5e6b50" } },
+    { "name": "Gulf Mist — Soft Greige & Stone Blue", "desc": "Quiet, neutral-forward. Reads timeless under harsh Cape Coral sun.", "colors": { "body": "#dcd5c7", "tower": "#6b7a82", "accent": "#8a9aa0" } },
+    { "name": "Key West — Cream & Coral", "desc": "Pastel coastal vernacular. Approved range per FL design overlays.", "colors": { "body": "#f1e8d4", "tower": "#a87560", "accent": "#cf8773" } },
+    { "name": "Calusa Earth — Limestone & Clay", "desc": "Indigenous-inspired earth tones. Highest neutrality compliance score.", "colors": { "body": "#e6dfd0", "tower": "#8b7355", "accent": "#a0664a" } },
+    { "name": "Riverfront Modern — White & Slate", "desc": "Minimal, high-contrast. Pairs with bronze impact window frames.", "colors": { "body": "#fbfaf6", "tower": "#3e4a52", "accent": "#5a6770" } },
+    { "name": "Sunset Stucco — Beige & Terracotta", "desc": "Classic Mediterranean / Florida. Terracotta on accent panels only.", "colors": { "body": "#ead9bf", "tower": "#856953", "accent": "#b46b4a" } },
+    { "name": "Sea Oats — Driftwood & Pale Gold", "desc": "Reads natural and quiet from the bridge. Low-maintenance visual.", "colors": { "body": "#ddd2bb", "tower": "#7d6f55", "accent": "#b59f6a" } }
+  ],
+  "defaultPaletteIdx": 1,
+  "exportFilenamePrefix": "harbor-south"
+}
