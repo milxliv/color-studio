@@ -4,7 +4,7 @@ Reusable color-study engine with per-subject configuration plus an optional
 vote-collection backend.
 
 ```
-public/                       static site, deploy to GitHub Pages
+docs/                       static site, deploy to GitHub Pages
   index.html                  shell — loads app.js + style.css
   app.js                      engine
   style.css
@@ -29,7 +29,7 @@ backend/                      Rust + Axum + SQLite vote collector
 - `/?subject=<id>&backend=<url>` — overrides backend at runtime.
 
 ### Adding a new subject
-1. Make a folder under `public/subjects/<new-id>/`.
+1. Make a folder under `docs/subjects/<new-id>/`.
 2. Drop in `main.<jpg|png>` and any `photos/*.jpg`.
 3. Copy `harbor-south/data.json` and tweak:
    - `id`, `title`, `subtitle`, `meta`, `footer`, `canvasId`
@@ -46,19 +46,19 @@ backend/                      Rust + Axum + SQLite vote collector
      your rendering and adjust ranges until the mask covers what you want.
    - `palettes[]` — preset color schemes; `colors` keys must match surface ids.
    - `compliance` — optional. Remove the section to hide it.
-4. Append the subject to `public/subjects/index.json`.
+4. Append the subject to `docs/subjects/index.json`.
 5. Reload `/?subject=<new-id>`.
 
 ### Local preview
+`python3 -m http.server 8000` is a single command — paste it without breaking the `-m` from `http.server`:
 ```sh
-cd public
-python3 -m http.server 8000
-# open http://localhost:8000/?subject=harbor-south
+cd docs && python3 -m http.server 8000
 ```
+Then open http://localhost:8000/?subject=harbor-south
 
 ### Deploy to GitHub Pages
-Anything in `public/` is the deployable site. Push that folder as the repo
-root (or use Pages with `/docs`-style source).
+Pages is configured to serve from the `docs/` folder on `main`. Push and it
+rebuilds automatically. Live URL pattern: `https://<user>.github.io/color-studio/`.
 
 ## Backend (vote collector)
 
@@ -75,7 +75,7 @@ Then point the frontend at it:
 ```
 /?subject=harbor-south&backend=http://localhost:8080
 ```
-…or set permanently in `public/index.html`:
+…or set permanently in `docs/index.html`:
 ```html
 <meta name="vote-backend" content="http://localhost:8080">
 ```
@@ -103,5 +103,5 @@ Then point the frontend at it:
 The backend is a single static binary plus a SQLite file. Any host that runs
 a long-lived process works: Fly.io, Railway, Shuttle.rs, a small VPS. Mount
 a persistent volume at `DB_PATH`. After deploy, set `CORS_ORIGIN` to your
-Pages URL (e.g. `https://milxliv.github.io`) and update the `<meta>` tag in
-`public/index.html` to the backend URL.
+Pages URL (e.g. `https://milxliv.github.io`) and update the `<meta name="vote-backend">` tag
+in `docs/index.html` to the backend URL.
