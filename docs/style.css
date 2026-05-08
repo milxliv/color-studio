@@ -336,7 +336,7 @@ canvas.bldg { width: 100%; height: auto; display: block; }
     margin-top: 4px;
     flex-wrap: wrap;
 }
-button.action {
+.action {
     flex: 1 1 calc(50% - 4px);
     background: var(--ink);
     color: var(--paper);
@@ -348,15 +348,18 @@ button.action {
     text-transform: uppercase;
     cursor: pointer;
     transition: background 0.15s;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
 }
-button.action:hover { background: #000; }
-button.action.ghost {
+.action:hover { background: #000; }
+.action.ghost {
     background: transparent;
     color: var(--ink);
     border: 1px solid var(--ink);
 }
-button.action.ghost:hover { background: var(--ink); color: var(--paper); }
-button.action:disabled { opacity: 0.4; cursor: not-allowed; }
+.action.ghost:hover { background: var(--ink); color: var(--paper); }
+.action:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .status-note {
     margin-top: 10px;
@@ -438,4 +441,69 @@ footer {
     text-transform: uppercase;
     color: var(--ink-2);
     margin-top: 4px;
+}
+
+.results-back {
+    color: var(--ink-2);
+    text-decoration: none;
+    border-bottom: 1px solid var(--rule);
+    padding-bottom: 1px;
+    transition: color 0.15s, border-color 0.15s;
+}
+.results-back:hover { color: var(--ink); border-color: var(--ink); }
+
+.results-list {
+    background: #fff;
+    border: 1px solid var(--rule);
+    padding: 16px 20px;
+}
+.result-row {
+    padding: 14px 0;
+    border-bottom: 1px dashed var(--paper-2);
+}
+.result-row:first-child { padding-top: 4px; }
+.result-row:last-child { border-bottom: 0; padding-bottom: 4px; }
+.result-head {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 12px;
+    margin-bottom: 8px;
+}
+.result-name { font-size: 16px; }
+.result-count {
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 11px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--ink-2);
+    white-space: nowrap;
+}
+.result-strip {
+    display: flex;
+    height: 18px;
+    gap: 2px;
+    margin-bottom: 6px;
+}
+.result-strip span {
+    flex: 1;
+    border: 1px solid rgba(0,0,0,0.08);
+}
+.result-bar {
+    height: 6px;
+    background: var(--paper-2);
+    border-radius: 3px;
+    overflow: hidden;
+}
+.result-bar-fill {
+    height: 100%;
+    background: var(--ink);
+    transition: width 0.4s;
+}
+.results-empty {
+    padding: 28px 0;
+    text-align: center;
+    color: var(--ink-2);
+    font-family: 'Helvetica Neue', Arial, sans-serif;
+    font-size: 13px;
 }

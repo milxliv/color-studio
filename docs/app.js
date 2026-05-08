@@ -7,6 +7,7 @@
     // ---- URL & config -----------------------------------------------------
     const params = new URLSearchParams(location.search);
     const SUBJECT_ID = params.get("subject");
+    const VIEW = params.get("view");
     const BACKEND_URL = (() => {
         const fromQuery = params.get("backend");
         if (fromQuery) return fromQuery.replace(/\/+$/, "");
@@ -120,8 +121,82 @@
         const r = await fetch(baseUrl + "data.json");
         if (!r.ok) throw new Error(`data.json: ${r.status}`);
         const data = await r.json();
+        if (VIEW === "results") {
+            await renderResults(data);
+            return;
+        }
         renderShell(data, baseUrl);
         await initEngine(data, baseUrl);
+    }
+
+    // ---- Results view -----------------------------------------------------
+    async function renderResults(data) {
+        const studioHref = `?subject=${encodeURIComponent(data.id)}`;
+        if (!BACKEND_URL) {
+            app.innerHTML = `
+                <header><div class="title-block">
+                    <h1>${escapeHtml(data.title || data.id)} — Results</h1>
+                    <div class="sub">Vote tally</div>
+                </div><div class="meta"><a class="results-back" href="${studioHref}">← Back to studio</a></div></header>
+                <div class="fatal"><p>No vote backend configured.</p></div>`;
+            return;
+        }
+        let tally;
+        try {
+            const r = await fetch(`${BACKEND_URL}/tally?subject=${encodeURIComponent(data.id)}`);
+            if (!r.ok) throw new Error(r.status + " " + r.statusText);
+            tally = await r.json();
+        } catch (e) {
+            app.innerHTML = `
+                <header><div class="title-block"><h1>${escapeHtml(data.title || data.id)} — Results</h1></div>
+                <div class="meta"><a class="results-back" href="${studioHref}">← Back to studio</a></div></header>
+                <div class="fatal"><p>Couldn't load tally: ${escapeHtml(String(e.message || e))}</p></div>`;
+            return;
+        }
+        const rows = tally.rows || [];
+        const total = tally.total || 0;
+        const max = rows.reduce((m, r) => Math.max(m, r.count), 0) || 1;
+        const surfaceIds = data.surfaces.map(s => s.id);
+
+        const rowsHtml = rows.length === 0
+            ? `<div class="results-empty">No votes yet. Be the first — pick a palette on the studio page and click <strong>Vote for This</strong>.</div>`
+            : rows.map(r => {
+                const pct = total ? (r.count / total * 100) : 0;
+                const barWidth = (r.count / max * 100);
+                const name = r.paletteName || customLabel(r.colors, surfaceIds);
+                const swatches = surfaceIds.map(sid => `<span style="background:${(r.colors[sid] || "#ccc")}"></span>`).join("");
+                return `
+                    <div class="result-row">
+                        <div class="result-head">
+                            <div class="result-name">${escapeHtml(name)}</div>
+                            <div class="result-count">${r.count} ${r.count === 1 ? "vote" : "votes"} · ${pct.toFixed(0)}%</div>
+                        </div>
+                        <div class="result-strip">${swatches}</div>
+                        <div class="result-bar"><div class="result-bar-fill" style="width:${barWidth.toFixed(1)}%"></div></div>
+                    </div>`;
+            }).join("");
+
+        app.innerHTML = `
+            <header>
+                <div class="title-block">
+                    <h1>${escapeHtml(data.title || data.id)} — Results</h1>
+                    <div class="sub">${total} total ${total === 1 ? "vote" : "votes"} cast</div>
+                </div>
+                <div class="meta">
+                    <a class="results-back" href="${studioHref}">← Back to studio</a>
+                    <div id="dateStamp"></div>
+                </div>
+            </header>
+            <div class="results-list">${rowsHtml}</div>
+            <footer>
+                <div>${data.footer?.left || ""}</div>
+                <div>${data.footer?.right || ""}</div>
+            </footer>`;
+        document.getElementById("dateStamp").textContent =
+            new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" });
+    }
+    function customLabel(colors, surfaceIds) {
+        return "Custom — " + surfaceIds.map(sid => (colors[sid] || "").toUpperCase()).join(" / ");
     }
 
     // ---- DOM construction -------------------------------------------------
@@ -195,6 +270,7 @@
                             <button class="action" id="btn-png">Save PNG</button>
                             <button class="action ghost" id="btn-share">Share Link</button>
                             <button class="action" id="btn-vote">Vote for This</button>
+                            <a class="action ghost" id="btn-results" href="?subject=${encodeURIComponent(data.id)}&view=results">See Results</a>
                             <button class="action ghost" id="btn-reset">Reset</button>
                         </div>
                         <div class="status-note" id="statusNote"></div>
