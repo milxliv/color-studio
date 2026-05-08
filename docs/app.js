@@ -477,7 +477,7 @@
 
         document.getElementById("btn-vote").addEventListener("click", async () => {
             if (!BACKEND_URL) {
-                setStatus("No vote backend configured. Add <meta name=\"vote-backend\" content=\"https://…\"> or ?backend=URL.", "err");
+                setStatus("No vote backend configured. Append ?backend=https://… to the URL, or set the vote-backend meta tag in index.html.", "err");
                 return;
             }
             const choice = {
@@ -511,7 +511,7 @@
         function setStatus(msg, cls = "") {
             const el = document.getElementById("statusNote");
             el.className = "status-note " + cls;
-            el.innerHTML = msg;
+            el.textContent = msg;
         }
 
         // ---- Image load -------------------------------------------------
